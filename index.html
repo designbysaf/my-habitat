@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>My Habitat - Media Gemifikasi Ekosistem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background-image: url(BG.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Calibri, sans-serif;
+        }
+
+        .app-container {
+            width: auto;
+            max-width: 600px;
+            height: 98vh;
+            min-height: 600px;
+            background: #fef7e04f;
+            border-radius: 20px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            background: #fef7e04f;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .main-panel {
+            flex: 1;
+            background-image: url(BG.png);
+            background-size: cover;
+            background-position: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* Welcome screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+            text-align: center;
+        }
+
+        .welcome-card {
+           
+            background-size: cover;
+            border-radius: 48px;
+            padding: 197px 1px;
+            max-width: 1020px;
+            width: 97%;
+        }
+
+        .welcome-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .big-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Habitat */
+        .habitat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .top-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(0deg, #855c1f 0%, #473409 100%);
+            padding: 12px 20px;
+            border-radius: 48px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .hint-area {
+            background: #ffffff8e;
+            padding: 8px 18px;
+            border-radius: 32px;
+            font-weight: bold;
+            color: #443006;
+        }
+
+        .health {
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+        }
+
+        .btn-help {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .ecosystem-canvas {
+            background: #cfebc5;
+            border-radius: 48px;
+            padding: 20px;
+            min-height: 200px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            border: 3px dashed #5a8f4c;
+        }
+
+        .bank-title {
+            font-weight: bold;
+            margin: 15px 0 8px;
+        }
+
+        /* PERBAIKAN UTAMA: bank komponen menjadi rapi & berjejer */
+        .components-bank {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 12px;
+            background: #fff1cf00;
+            border-radius: 48px;
+            padding: 16px;
+        }
+
+        .component-card {
+            flex: 0 0 10px;          /* lebar tetap agar berjejer rapi */
+            text-align: center;
+            padding: 8px 5px;
+            cursor: pointer;
+            transition: 0.1s;
+            border: 2px solid #c29b3a;
+            background: #ffe0a3;
+            border-radius: 28px;
+            font-size: 0.8rem;
+        }
+
+        .component-card img {
+            max-width: 70px;
+            max-height: 70px;
+            display: block;
+            margin: 0 auto 6px;
+            object-fit: contain;
+        }
+
+        .component-card.disabled {
+            opacity: 0.5;
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .component-card:active {
+            transform: scale(0.96);
+        }
+
+        .score-panel {
+            background: #00897b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Quiz & Bahan Ajar */
+        .quiz-area, .bahan-area {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 40px;
+            padding: 50px;
+        }
+
+        .quiz-question {
+            background: #127e2d;
+            padding: 20px;
+            border-radius: 32px;
+            color: white;
+            margin: 20px 0;
+        }
+
+        .option {
+            background: #a7ffba;
+            margin: 10px;
+            padding: 12px;
+            border-radius: 60px;
+            cursor: pointer;
+        }
+
+        .pdf-item {
+            background: #5e460294;
+            padding: 25px;
+            border-radius: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 15px 0;
+            gap: 1px;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="navbar">
+        <div class="logo"><img src="Logo Myhabit.png" height="60" alt="Logo"></div>
+        <div class="nav-buttons">
+            <button class="nav-btn" id="navWelcome"><img src="hm.png" height="40" alt="Home"></button>
+            <button class="nav-btn" id="navHabitat"><img src="HSS.png" height="40" alt="Habitat"></button>
+            <button class="nav-btn" id="navQuiz"><img src="LSS.png" height="40" alt="Quiz"></button>
+            <button class="nav-btn" id="navBahan"><img src="BAA.png" height="40" alt="Bahan"></button>
+        </div>
+    </div>
+    <div class="main-panel" id="mainPanel"></div>
+</div>
+
+<script>
+    // DATA EKOSISTEM
+    const ECOSYSTEMS = {
+        sawah: { name: "🌾 EKOSISTEM SAWAH", validComponents: ["padi", "belalang", "katak", "ular", "jamurPengurai"], hint: "Ekosistem buatan untuk bercocok tanam padi, rantai makanan: padi → belalang → katak → ular, plus pengurai." },
+        pantai: { name: "🏖️ EKOSISTEM PANTAI", validComponents: ["kelapa", "kepiting", "camar", "cacingPasir", "bakteriPengurai"], hint: "Daerah perbatasan laut-darat, berpasir, ada kelapa, kepiting, camar, dan pengurai." },
+        hutan: { name: "🌲 EKOSISTEM HUTAN HUJAN", validComponents: ["pohon", "kera", "harimau", "kelinci", "jamurPengurai"], hint: "Hutan lebat dengan pohon, kera, harimau, kelinci, dan jamur pengurai." },
+        mangrove: { name: "🌿 EKOSISTEM MANGROVE", validComponents: ["bakau", "udang", "burungBangau", "monitorLizard", "bakteriPengurai"], hint: "Hutan bakau di pesisir, tempat udang, bangau, biawak, dan pengurai." }
+    };
+
+    // BANK KOMPONEN - DENGAN GAMBAR YANG RAPI
+    // Setiap komponen memiliki gambar dan teks singkat
+    const ALL_COMPONENTS = [
+        { id: "padi", name: "Padi", img: "Pad.png", validFor: ["sawah"] },
+        { id: "belalang", name: "Belalang", img: "Bel.png", validFor: ["sawah"] },
+        { id: "katak", name: "Katak", img: "Kat.png", validFor: ["sawah"] },
+        { id: "ular", name: "Ular", img: "Ul.png", validFor: ["sawah"] },
+        { id: "jamurPengurai", name: "Jamur", img: "Jam.png", validFor: ["sawah", "hutan", "mangrove"] },
+        { id: "kelapa", name: "Kelapa", img: "Kelp.png", validFor: ["pantai"] },
+        { id: "kepiting", name: "Kepiting", img: "Kep.png", validFor: ["pantai"] },
+        { id: "camar", name: "Camar", img: "Camar.png", validFor: ["pantai"] },
+        { id: "cacingPasir", name: "Cacing Pasir", img: "Cac.png", validFor: ["pantai"] },
+        { id: "bakteriPengurai", name: "Bakteri", img: "Bak.png", validFor: ["sawah", "pantai", "hutan", "mangrove"] },
+        { id: "pohon", name: "Pohon", img: "Poh.png", validFor: ["hutan"] },
+        { id: "kera", name: "Kera", img: "Mon.png", validFor: ["hutan"] },
+        { id: "harimau", name: "Harimau", img: "Har.png", validFor: ["hutan"] },
+        { id: "kelinci", name: "Kelinci", img: "Kel.png", validFor: ["hutan"] },
+        { id: "bakau", name: "Bakau", img: "Mang.png", validFor: ["mangrove"] },
+        { id: "udang", name: "Udang", img: "Ud.png", validFor: ["mangrove"] },
+        { id: "burungBangau", name: "Bangau", img: "Bang.png", validFor: ["mangrove"] },
+        { id: "monitorLizard", name: "Biawak", img: "Biw.png", validFor: ["mangrove"] }
+    ];
+
+    // State game
+    let currentEcosystem = null;
+    let ecosystemName = "";
+    let currentValidComponents = [];
+    let placedComponents = [];
+    let health = 5;
+    let helpUsed = 0;
+    let maxHelp = 2;
+    let gameStarted = false;
+    let startTime = null;
+    let mistakes = 0;
+    let gameFinished = false;
+    let timerInterval = null;
+    let currentScoreDetail = null;
+
+    let mainPanel = document.getElementById("mainPanel");
+    let activePage = "welcome";
+
+    function stopTimer() {
+        if(timerInterval) clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    function calculateFinalScore() {
+        if(!startTime) return { score: 0, time: 0, mistakes: 0, helpUsed: 0 };
+        let timeSpent = Math.floor((Date.now() - startTime) / 1000);
+        let timeBonus = Math.max(0, 100 - Math.floor(timeSpent / 2));
+        let total = 100 + timeBonus - (mistakes * 15) - (helpUsed * 20);
+        if (total < 0) total = 0;
+        if (total > 200) total = 200;
+        return { score: total, time: timeSpent, mistakes, helpUsed };
+    }
+
+    function initHabitatGame(ecosystemKey) {
+        stopTimer();
+        currentEcosystem = ecosystemKey;
+        ecosystemName = ECOSYSTEMS[ecosystemKey].name;
+        currentValidComponents = [...ECOSYSTEMS[ecosystemKey].validComponents];
+        placedComponents = [];
+        health = 5;
+        helpUsed = 0;
+        mistakes = 0;
+        gameFinished = false;
+        startTime = Date.now();
+        gameStarted = true;
+        timerInterval = setInterval(() => {
+            if(!gameFinished && gameStarted && activePage === "habitat") renderHabitatSpace();
+        }, 1000);
+        renderHabitatSpace();
+    }
+
+    function attemptPlaceComponent(compId, compName) {
+        if(gameFinished || !gameStarted) {
+            alert("Permainan selesai. Reset untuk mulai baru.");
+            return false;
+        }
+        if(placedComponents.includes(compId)) {
+            alert("Komponen sudah ada di ekosistem!");
+            return false;
+        }
+        const isValid = currentValidComponents.includes(compId);
+        if(isValid) {
+            placedComponents.push(compId);
+            renderHabitatSpace();
+            if(placedComponents.length === currentValidComponents.length) {
+                gameFinished = true;
+                stopTimer();
+                const final = calculateFinalScore();
+                currentScoreDetail = final;
+                alert(`🎉 SELAMAT! Ekosistem ${ecosystemName} lengkap!\nNilai Akhir: ${final.score}\nWaktu: ${final.time} detik\nSalah: ${final.mistakes}\nBantuan: ${final.helpUsed}`);
+                renderHabitatSpace();
+            }
+        } else {
+            health--;
+            mistakes++;
+            if(health <= 0) {
+                health = 0;
+                gameFinished = true;
+                stopTimer();
+                alert(`💀 GAME OVER! Terlalu banyak kesalahan.`);
+                renderHabitatSpace();
+            } else {
+                alert(`❌ Salah! ${compName} tidak cocok untuk ${ecosystemName}. Nyawa tersisa: ${health}`);
+                renderHabitatSpace();
+            }
+        }
+    }
+
+    function useHelp() {
+        if(gameFinished) { alert("Game sudah selesai!"); return; }
+        if(helpUsed >= maxHelp) { alert("Bantuan hanya 2 kali."); return; }
+        const missing = currentValidComponents.filter(c => !placedComponents.includes(c));
+        if(missing.length === 0) { alert("Semua komponen sudah ada!"); return; }
+        const randomComp = missing[Math.floor(Math.random() * missing.length)];
+        placedComponents.push(randomComp);
+        helpUsed++;
+        renderHabitatSpace();
+        if(placedComponents.length === currentValidComponents.length) {
+            gameFinished = true;
+            stopTimer();
+            const final = calculateFinalScore();
+            currentScoreDetail = final;
+            alert(`✨ Bantuan berhasil! Ekosistem lengkap. Nilai: ${final.score}`);
+            renderHabitatSpace();
+        } else {
+            const comp = ALL_COMPONENTS.find(c=>c.id === randomComp);
+            alert(`🔧 Bantuan: ${comp.name} ditambahkan. Sisa bantuan: ${maxHelp-helpUsed}`);
+        }
+    }
+
+    function getRandomHint() {
+        const keys = Object.keys(ECOSYSTEMS);
+        const rand = keys[Math.floor(Math.random() * keys.length)];
+        return { key: rand, hintText: ECOSYSTEMS[rand].hint, name: ECOSYSTEMS[rand].name };
+    }
+
+    function renderHabitatSpace() {
+        if(!gameStarted || !currentEcosystem) {
+            mainPanel.innerHTML = `
+                <div class="habitat-container" style="align-items:center;">
+                    <button id="hintBtnGlobal" class="btn-help"><img src="Hint.png" height="80" alt="Hint"></button>
+                    <p><img src="exos.png" height="150" alt="Ekosistem"></p>
+                </div>
+            `;
+            const hintBtn = document.getElementById("hintBtnGlobal");
+            if(hintBtn) hintBtn.onclick = () => {
+                const {key, hintText, name} = getRandomHint();
+                if(confirm(`🌍 HINT: ${name}\n\n${hintText}\n\nMulai bangun ekosistem ${name}?`)) initHabitatGame(key);
+            };
+            return;
+        }
+
+        const waktuBerjalan = startTime ? Math.floor((Date.now() - startTime)/1000) : 0;
+        let finalInfo = "";
+        if(gameFinished && placedComponents.length === currentValidComponents.length && currentScoreDetail) {
+            finalInfo = `<div class="score-panel" style="background:#2e7d32;">🏆 NILAI AKHIR: ${currentScoreDetail.score} | Waktu: ${currentScoreDetail.time} dtk | Salah: ${currentScoreDetail.mistakes} | Bantuan: ${currentScoreDetail.helpUsed}</div>`;
+        } else if(gameFinished && health <=0) {
+            finalInfo = `<div class="score-panel" style="background:#b71c1c;">❌ GAME OVER - Ekosistem gagal</div>`;
+        } else {
+            let estimasi = Math.max(0, 100 - (mistakes*15) - (helpUsed*20) + Math.max(0, 100 - Math.floor(waktuBerjalan/2)));
+            finalInfo = `<div class="score-panel">⭐ Skor sementara: ${estimasi}</div>`;
+        }
+
+        // Komponen yang sudah terpasang (dengan gambar)
+        let compsPlacedHtml = `<div class="bank-title">✅ TERPASANG (${placedComponents.length}/${currentValidComponents.length})</div>
+        <div class="components-bank">${placedComponents.map(pid => {
+            const c = ALL_COMPONENTS.find(ca=> ca.id === pid);
+            return `<div class="component-card" style="background:#a5d6a7;">
+                        <img src="${c.img}" alt="${c.name}" style="width:60px; height:60px;">
+                        <div>✔️ ${c.name}</div>
+                    </div>`;
+        }).join('')}</div>`;
+
+        // BANK KOMPONEN - dengan gambar dan teks, berjejer rapi berkat CSS flex lebar tetap
+        let bankHtml = `<div class="bank-title">📦 BANK KOMPONEN (Klik untuk menambah ke ekosistem)</div>
+        <div class="components-bank">${ALL_COMPONENTS.map(comp => {
+            const already = placedComponents.includes(comp.id);
+            return `<div class="component-card ${already ? 'disabled' : ''}" 
+                        data-id="${comp.id}" data-name="${comp.name}"
+                        style="${already ? 'opacity:0.5; background:#ccc' : ''}">
+                        <img src="${comp.img}" alt="${comp.name}" style="width:60px; height:60px;">
+                        <div>${comp.name}</div>
+                    </div>`;
+        }).join('')}</div>`;
+
+        const html = `
+            <div class="habitat-container">
+                <div class="top-controls">
+                    <div class="hint-area">🌍 ${ecosystemName} | ❤️ ${"❤️".repeat(health)}${"🖤".repeat(5-health)}</div>
+                    <div>⏱️ ${waktuBerjalan} detik</div>
+                    <button id="helpButton" class="btn-help" ${helpUsed>=maxHelp || gameFinished ? 'disabled' : ''}><img src="Ban.png" height="30" alt="Bantuan"> (${helpUsed}/${maxHelp})</button>
+                    <button id="resetHabitatBtn" class="btn-help"><img src="Res.png" height="30" alt="Reset"></button>
+                </div>
+                ${finalInfo}
+                <div class="ecosystem-canvas">
+                    <div style="width:100%; font-weight:bold;">✨ Tempatkan komponen yang cocok ✨</div>
+                    ${compsPlacedHtml}
+                </div>
+                ${bankHtml}
+                <div style="background:#ffe7ba; border-radius:28px; padding:10px; font-size:0.8rem;">Petunjuk: Klik komponen dari BANK untuk memasukkan ke ekosistem. Cocokkan dengan ekosistem yang dipilih!</div>
+            </div>
+        `;
+        mainPanel.innerHTML = html;
+
+        // Event klik untuk komponen bank (hanya yang belum terpasang)
+        document.querySelectorAll('.component-card[data-id]').forEach(el => {
+            if(!el.classList.contains('disabled')) {
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if(gameFinished) { alert("Game selesai, tekan Reset untuk main baru."); return; }
+                    const compId = el.getAttribute('data-id');
+                    const compName = el.getAttribute('data-name');
+                    attemptPlaceComponent(compId, compName);
+                });
+            }
+        });
+        const helpBtn = document.getElementById("helpButton");
+        if(helpBtn) helpBtn.onclick = () => useHelp();
+        const resetBtn = document.getElementById("resetHabitatBtn");
+        if(resetBtn) resetBtn.onclick = () => {
+            stopTimer();
+            gameStarted = false;
+            currentEcosystem = null;
+            renderHabitatSpace();
+        };
+    }
+
+    // QUIZ (tetap sama seperti sebelumnya)
+    const quizData = [
+        { question: "Peran produsen dalam ekosistem adalah...", options: ["Memakan konsumen", "Menghasilkan energi dari matahari", "Menguraikan sampah", "Memangsa hewan lain"], correct: 1 },
+        { question: "Berikut yang termasuk komponen pengurai adalah...", options: ["Pohon mangga", "Belalang", "Jamur", "Harimau"], correct: 2 },
+        { question: "Ekosistem sawah biasanya memiliki produsen utama berupa...", options: ["Rumput laut", "Padi", "Teratai", "Ganggang"], correct: 1 },
+        { question: "Interaksi katak dan belalang di sawah adalah...", options: ["Simbiosis mutualisme", "Predasi", "Kompetisi", "Netral"], correct: 1 },
+        { question: "Apa yang terjadi jika tidak ada pengurai?", options: ["Produsen subur", "Sampah organik menumpuk", "Populasi konsumen meningkat", "Tidak ada efek"], correct: 1 }
+    ];
+    let currentQuizIndex = 0, quizScore = 0, quizDone = false;
+    function renderQuiz() {
+        if(quizDone) {
+            mainPanel.innerHTML = `<div class="quiz-area"><h2>📋 Latihan Selesai</h2><p>Skor akhir: ${quizScore}/${quizData.length}</p><button class="big-btn" id="resetQuiz">Ulang Latihan</button><button class="big-btn" id="backHomeQuiz">Kembali</button></div>`;
+            document.getElementById("resetQuiz")?.addEventListener("click",()=>{ quizScore=0; currentQuizIndex=0; quizDone=false; renderQuiz(); });
+            document.getElementById("backHomeQuiz")?.addEventListener("click",()=> showPage("welcome"));
+            return;
+        }
+        if(currentQuizIndex >= quizData.length) { quizDone=true; renderQuiz(); return; }
+        const q = quizData[currentQuizIndex];
+        mainPanel.innerHTML = `
+            <div class="quiz-area">
+                <h2>📝 Latihan Soal (${currentQuizIndex+1}/${quizData.length})</h2>
+                <div class="quiz-question"><strong>${q.question}</strong></div>
+                <div>${q.options.map((opt,idx)=>`<div class="option" data-opt="${idx}">${opt}</div>`).join('')}</div>
+                <div style="margin-top:20px;">Skor: ${quizScore}</div>
+                <button id="backQuizBtn" class="big-btn">Kembali</button>
+            </div>`;
+        document.querySelectorAll('.option').forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                const selected = parseInt(opt.getAttribute('data-opt'));
+                if(selected === q.correct) { quizScore++; alert("✅ Benar!"); }
+                else alert(`❌ Salah! Jawaban benar: ${q.options[q.correct]}`);
+                currentQuizIndex++;
+                renderQuiz();
+            });
+        });
+        document.getElementById("backQuizBtn")?.addEventListener("click",()=> showPage("welcome"));
+    }
+
+    function renderBahanAjar() {
+        mainPanel.innerHTML = `
+            <div class="bahan-area">
+                <h2>📘 Bahan Ajar Ekosistem</h2>
+                <div class="pdf-list">
+                    <div class="pdf-item"><span>Ekosistem</span><button class="btn-help" onclick="window.open('https://barkahpublishing.com/wp-content/uploads/2025/02/1.-BUKU-Lengkap-OK.pdf','_blank')">📖 Baca</button></div>
+                    <div class="pdf-item"><span>Modul Biologi Ekosistem</span><button class="btn-help" onclick="window.open('https://repositori.kemendikdasmen.go.id/22023/1/X_Biologi_KD-3.10_Final.pdf','_blank')">📖 Baca</button></div>
+                    <div class="pdf-item"><span>Keterkaitan Antar Komponen Biotik dan Abiotik </span><button class="btn-help" onclick="window.open('https://ejurnal.kampusakademik.co.id/index.php/jinu/article/view/6101/5280','_blank')">📖 Baca</button></div>
+                </div>
+                <button id="backBahan" class="big-btn" style="margin-top:20px;">Kembali</button>
+            </div>`;
+        document.getElementById("backBahan")?.addEventListener("click",()=> showPage("welcome"));
+    }
+
+    function showPage(page) {
+        activePage = page;
+        if(page === "welcome") {
+            stopTimer();
+            gameStarted = false;
+            mainPanel.innerHTML = `
+                <div class="welcome-screen">
+                    <div class="welcome-card">
+                        <h1><img src="SD.png" height="50" alt="SD"></h1>
+                        <h1><img src="Logo Myhabit.png" height="120" alt="Logo"></h1>
+                        <p><img src="MGE.png" height="30" alt="MGE"></p>
+                        <div class="welcome-buttons">
+                            <button id="goHabitatBtn" class="big-btn"><img src="HS.png" height="60" alt="Habitat"></button>
+                            <button id="goQuizBtn" class="big-btn"><img src="LS.png" height="60" alt="Quiz"></button>
+                            <button id="goBahanBtn" class="big-btn"><img src="BA.png" height="60" alt="Bahan Ajar"></button>
+                        </div>
+                    </div>
+                </div>`;
+            document.getElementById("goHabitatBtn")?.addEventListener("click",()=>showPage("habitat"));
+            document.getElementById("goQuizBtn")?.addEventListener("click",()=>showPage("quiz"));
+            document.getElementById("goBahanBtn")?.addEventListener("click",()=>showPage("bahan"));
+        } else if(page === "habitat") {
+            if(!gameStarted || !currentEcosystem) { gameStarted=false; currentEcosystem=null; renderHabitatSpace(); }
+            else renderHabitatSpace();
+        } else if(page === "quiz") { stopTimer(); renderQuiz(); }
+        else if(page === "bahan") { stopTimer(); renderBahanAjar(); }
+    }
+
+    // Navbar
+    document.getElementById("navWelcome").onclick = () => showPage("welcome");
+    document.getElementById("navHabitat").onclick = () => showPage("habitat");
+    document.getElementById("navQuiz").onclick = () => showPage("quiz");
+    document.getElementById("navBahan").onclick = () => showPage("bahan");
+
+    showPage("welcome");
+</script>
+</body>
+</html>
